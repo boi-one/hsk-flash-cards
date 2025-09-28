@@ -1,5 +1,6 @@
 import * as customHSKOptions from './hskList.js'
-import * as practiceSettings from './practiceSettings.js'
+import { practiceSession } from './practiceSettings.js';
+
 
 const customCheckbox = document.getElementById('custom');
 const customLevelSelector = document.getElementById('customLevel');
@@ -25,19 +26,15 @@ startButton.addEventListener('click', () => {
 });
 
 let settingsMenuOpen = false;
-settingsButton.addEventListener('click', () => { //todo: wanneer je het weg klikt en weer terug klikt laad de settings in uit de practiceSession class
+settingsButton.addEventListener('click', () => {
     settingsMenuOpen = !settingsMenuOpen;
-    
+
     if(settingsMenuOpen)
     {
-        const lol = practiceSettings.CreateOptions();
-        start.insertAdjacentElement('afterend', lol);
+        const optionsMenu = practiceSettings.CreateOptions();
+        start.insertAdjacentElement('afterend', optionsMenu);
     }
-    else
-    {
-       // close the window again which should be opened by the if statement above
-       document.getElementById('settingswindow').remove();
-    }
+    else document.getElementById('settingswindow').remove();
 });
 
 function CreateCustomHSKWindow(elements = [])
@@ -60,20 +57,17 @@ customCheckbox.addEventListener('click', () => {
         const newItem = document.createElement('div');
         newItem.id = 'customSelection';
         newItem.textContent = "new item";
-        if (!hskData) {
-            customHSKOptions.GenerateHSKListElements().then(customHSKElements => {
+        customHSKOptions.GenerateHSKListElements().then(customHSKElements => {
                 CreateCustomHSKWindow(customHSKElements);
             });
-        }
-        // hskdata is if the data is retrieved from the server or not
-        if (hskData) { 
-            
-
-            
-        }
-
     }
     else {
         document.getElementById('customLevelOptions').remove();
+        //TODO: als custom uitgezet word alleen nog maar de andere hsk levels die geactiveerd zijn includeren
+        //      als je klikt met spatie dat de checkbox uitgaat die je net hebt geklikt
+        //      als je hsk1 of 2 etc. aanklikt en custom ook aan hebt staan zet alles van hsk1 of 2 etc. aan in de custom viewer
+        //      catagorizeer op hsk level in de custom viewer
+        //      mooiere css (waaronder de settings menu bold titles voor variations, order etc. naast elkaar ipv boven elkaar)
+        //      check pagina voor bugs enzo
     }
 });

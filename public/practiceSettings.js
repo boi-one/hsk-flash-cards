@@ -15,12 +15,12 @@ const order = {
 
 const orderOptions = [];
 
-class PracticeSession {
+export class PracticeSession {
     wordSelection = [];
     sessionOrder = order.random;
 
     sessionVariations = {
-        english_pinyin: false,
+        english_pinyin: true,
         english_hanzi: false,
         pinyin_hanzi: false,
         pinyin_english: false,
@@ -54,17 +54,18 @@ class PracticeSession {
 export const practiceSession = new PracticeSession();
 
 //TODO: DELETE!
-document.addEventListener('keydown', function(event) {
-    console.log(practiceSession);
-});
+// document.addEventListener('keydown', function (event) {
+//     console.log(practiceSession);
+// });
 
-function CreateVariationOption(titleName, variation) {
+function CreateVariationOption(titleName, variation, enabled = false) {
     let practiceOption = document.createElement('div');
     let title = document.createElement('p');
     let select = document.createElement('input');
 
     title.innerText = titleName;
     select.type = 'checkbox';
+    select.checked = enabled;
     practiceOption.className = 'option';
 
     select.addEventListener('change', selected => {
@@ -84,6 +85,7 @@ function CreateDifficultyOption(titleName, setOrder) {
 
     title.innerText = titleName;
     select.type = 'checkbox';
+    select.checked = (setOrder === practiceSession.sessionOrder);
     practiceOption.className = 'option';
 
     select.addEventListener('change', selected => {
@@ -101,8 +103,7 @@ function disableAllCheckbox(clickedCheckbox, setOrder) {
         const option = orderOptions[index];
         const checkbox = option.querySelector('input[type="checkbox"]');
 
-        if(checkbox === clickedCheckbox)
-        {
+        if (checkbox === clickedCheckbox) {
             practiceSession.sessionOrder = setOrder;
             continue;
         }
@@ -112,12 +113,13 @@ function disableAllCheckbox(clickedCheckbox, setOrder) {
 }
 
 export function CreateOptions() {
-    const english_pinyin = CreateVariationOption("english to pinyin", variations.english_pinyin);
-    const english_hanzi = CreateVariationOption("english to hanzi", variations.english_hanzi);
-    const pinyin_hanzi = CreateVariationOption("pinyin to hanzi", variations.pinyin_hanzi);
-    const pinyin_english = CreateVariationOption("pinyin to english", variations.pinyin_english);
-    const hanzi_english = CreateVariationOption("hanzi to english", variations.hanzi_english);
-    const hanzi_pinyin = CreateVariationOption("hanzi to pinyin", variations.hanzi_pinyin);
+
+    const english_pinyin = CreateVariationOption("english to pinyin", variations.english_pinyin, practiceSession.sessionVariations.english_pinyin);
+    const english_hanzi = CreateVariationOption("english to hanzi", variations.english_hanzi, practiceSession.sessionVariations.english_hanzi);
+    const pinyin_hanzi = CreateVariationOption("pinyin to hanzi", variations.pinyin_hanzi, practiceSession.sessionVariations.pinyin_hanzi);
+    const pinyin_english = CreateVariationOption("pinyin to english", variations.pinyin_english, practiceSession.sessionVariations.pinyin_english);
+    const hanzi_english = CreateVariationOption("hanzi to english", variations.hanzi_english, practiceSession.sessionVariations.hanzi_english);
+    const hanzi_pinyin = CreateVariationOption("hanzi to pinyin", variations.hanzi_pinyin, practiceSession.sessionVariations.hanzi_pinyin);
 
     const easy = CreateDifficultyOption("easy", order.easy);
     const difficult = CreateDifficultyOption("difficult", order.difficult);

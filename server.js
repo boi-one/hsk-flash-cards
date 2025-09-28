@@ -22,6 +22,7 @@ app.get('/hsk1', (req, res) => {
         if (err) {
             return res.status(500).json({ error: err.message });
         }
+        console.log(rows);
         res.json(rows);
     });
 });
@@ -32,6 +33,7 @@ app.get('/hsk2', (req, res) => {
         if (err) {
             return res.status(500).json({ error: err.message });
         }
+        console.log(rows);
         res.json(rows);
     });
 });
@@ -46,4 +48,4 @@ app.get('/customhsk', (req, res) => {
     });
 });
 
-app.listen(PORT, () => {console.log("server is running on port: " + PORT)});
+app.listen(PORT, () => { console.log("server is running on port: " + PORT) });

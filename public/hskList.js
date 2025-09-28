@@ -1,4 +1,4 @@
-export const selectedCards = [];
+import * as practiceSettings from './practiceSettings.js'
 
 let hskData = null;
 
@@ -19,9 +19,16 @@ export function ReturnHSKList(route = 'customhsk') {
             });
     }
     else{
-        console.log("reuse data");   
+        console.log("reuse data");
         return Promise.resolve(hskData);
     }
+}
+
+function SameWord(word){
+    for(let i = 0; i < practiceSettings.practiceSession.wordSelection.length; i++){
+        if(word === practiceSettings.practiceSession.wordSelection[i].english) return true;
+    }
+    return false;
 }
 
 export function GenerateHSKListElements() {
@@ -44,16 +51,19 @@ export function GenerateHSKListElements() {
             let passedCount = document.createElement('p');
             let correct = document.createElement('p');
             let correctCount = document.createElement('p');
+            
+            const sameWord = SameWord(currentIndex.english);
 
             card.className = 'card';
             card.style.borderStyle = 'solid';
-            card.style.borderColor = 'rgba(0, 0, 0, 0)';
+            card.style.borderColor = sameWord ? 'rgba(255, 255, 255, 1)' : 'rgba(0, 0, 0, 0)';
             word.className = 'word';
             english.innerText = currentIndex.english;
             pinyin.innerText = currentIndex.pinyin;
             hanzi.innerText = currentIndex.hanzi;
             hanzi.style.fontSize = '2em';
             select.type = 'checkbox';
+            select.checked = sameWord;
             passed.innerText = 'passed';
             passed.style.fontWeight = '900';
             passedCount.innerText = currentIndex.passed;
@@ -81,12 +91,15 @@ export function GenerateHSKListElements() {
             select.addEventListener('change', selected => {
                 cardSelected = !cardSelected;
                 if (cardSelected) {
+                    console.log(currentIndex);
                     card.style.borderColor = 'rgba(255, 255, 255, 1)';
-                    selectedCards.push(currentIndex);
+                    practiceSettings.practiceSession.wordSelection.push(currentIndex);
                 }
                 else {
                     card.style.borderColor = 'rgba(0, 0, 0, 0)';
+                    practiceSettings.practiceSession.wordSelection.pop(currentIndex);
                 }
+                console.log("words ", practiceSettings.practiceSession.wordSelection.length);
             });
         }
         return elements;
